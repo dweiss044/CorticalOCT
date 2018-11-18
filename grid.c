@@ -83,12 +83,8 @@ void gridInit(Grid *g) {
 		  			Cezh(mm, nn) = Cdtds*imp0 /epsr_dura;
 				}else{
 					for(j = 0; j<SIZE ;j++){
-					  /*
-					        x1 = cx[j];
-					        y1 = cy[j];
-						r1 = r[j];
-						l1 = l[j];
-					  */
+					  //     xLocation = mm - cx[j];
+					  //	yLocation = nn - cy[j];
 					  // TODO: fix pyramidal cells
 						if(mm > cx[j]-l[j] && mm < cx[j]){
 						  if(nn > cy[j]-r[j] && nn < cy[j]){
@@ -96,10 +92,13 @@ void gridInit(Grid *g) {
 								Cezh(mm, nn) = Cdtds*imp0 /epsr_fibres;
 								break;
 							}
+				    
 						// TODO: add myelin sheath
+						                Ceze(mm, nn) = 1.0;
+								Cezh(mm, nn) = Cdtds*imp0 /epsr_csf;
 						}
 						
-					   
+					
 						
 						/*
 						if(xLocation*xLocation + yLocation*yLocation <= r[j]*r[j]){//nerve fibres and their myelin sheath
@@ -118,6 +117,7 @@ void gridInit(Grid *g) {
 								Cezh(mm, nn) = Cdtds*imp0 /epsr_csf;
 						        }
 					}
+					
 				}
 				temp = (float)Cezh(mm, nn);
 				fwrite(&temp, sizeof(float), 1, out); // write the float

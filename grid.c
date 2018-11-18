@@ -25,7 +25,7 @@ void gridInit(Grid *g) {
   Type    = tmZGrid;
   SizeX   = 13000; // size of domain in x with dx = 100nm, simulation domain = 1.3 mm
   SizeY   = 2000;	//size of domain in y  with dy = 100nm, simulation domain = .2 mm
-  MaxTime = 30000; // duration of simulation
+  MaxTime = 60000; // duration of simulation
   Cdtds   = 1.0/sqrt(2.0); // Courant number
 
 	//Allocate memory

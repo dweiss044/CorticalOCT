@@ -65,8 +65,8 @@ void gridInit(Grid *g) {
 		read = fopen("filegridCortex.txt","r");
 		for(i = 0; i<SIZE; i++){
 		  // UNCOMMENT if seg faulting at initGrid
-		  char str[12];
-		  sprintf(str, "%d", i);
+		  //char str[12];
+		  //sprintf(str, "%d", i);
 		  fscanf(read, "%d %d %d %d",&cx[i],&cy[i],&r[i],&l[i]);
 		}
 		fclose(read);
@@ -82,25 +82,35 @@ void gridInit(Grid *g) {
   					Ceze(mm, nn) = 1.0;
 		  			Cezh(mm, nn) = Cdtds*imp0 /epsr_dura;
 				}else{
+				  // Initialize all mm, nn in cortex to csf values, will overwrite in cell regions
+				  	Ceze(mm, nn) = 1.0;
+					Cezh(mm, nn) = Cdtds*imp0 /epsr_csf;
 					for(j = 0; j<SIZE ;j++){
-					  //     xLocation = mm - cx[j];
-					  //	yLocation = nn - cy[j];
-					  // TODO: fix pyramidal cells
-						if(mm > cx[j]-l[j] && mm < cx[j]){
-						  if(nn > cy[j]-r[j] && nn < cy[j]){
+					  	r1 = r[j]-1;
+					  // TODO: make pyramidal cell morphology
+						if(mm > cx[j]-l[j] && mm < cx[j] && nn > cy[j] - r[j] && nn < cy[j]){
+						  if(nn > cy[j]-r1 && nn < cy[j]){
 								Ceze(mm, nn) = 1.0;
 								Cezh(mm, nn) = Cdtds*imp0 /epsr_fibres;
 								break;
 							}
-				    
-						// TODO: add myelin sheath
+						  else if(nn > cy[j]-r1 && nn < cy[j]-r[j])
+						    {
 						                Ceze(mm, nn) = 1.0;
-								Cezh(mm, nn) = Cdtds*imp0 /epsr_csf;
+								Cezh(mm, nn) = Cdtds*imp0 /epsr_myelin;
+								break;
+						  }
 						}
-						
+					}
 					
+				}
+				
 						
 						/*
+							for(j = 0; j<SIZE ;j++){
+						xLocation = mm - cx[j];
+						yLocation = nn - cy[j];
+						r1 = r[j]-5;
 						if(xLocation*xLocation + yLocation*yLocation <= r[j]*r[j]){//nerve fibres and their myelin sheath
 							if(xLocation*xLocation + yLocation*yLocation <= r1*r1){
 								Ceze(mm, nn) = 1.0;
@@ -111,14 +121,12 @@ void gridInit(Grid *g) {
 							Cezh(mm, nn) = Cdtds*imp0 /epsr_myelin;
 							break;
 							}
-						*/
 							else{
 								Ceze(mm, nn) = 1.0;
-								Cezh(mm, nn) = Cdtds*imp0 /epsr_csf;
-						        }
-					}
-					
-				}
+								Cezh(mm, nn) = Cdtds*imp0 /epsr_endo;
+							}
+
+						*/
 				temp = (float)Cezh(mm, nn);
 				fwrite(&temp, sizeof(float), 1, out); // write the float
 		
